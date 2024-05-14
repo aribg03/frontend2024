@@ -1,6 +1,8 @@
+import React from "react"
 import withReactContent from "sweetalert2-react-content"
 import {useForm} from "./Hooks/useForm"
 import Swal from "sweetalert2"
+import {v4 as uuidv4} from 'uuid'
 
 const taskInfo = {
     task: '',
@@ -9,17 +11,30 @@ const taskInfo = {
     limit: '',
 }
 
-const AddTaskModal = ({taskList, setTaskList}) => {
-    const [values, HandleInputChange, reset] = useForm(taskInfo)
+const AddTaskModal = ({task = null, taskList, setTaskList}) => {
+    const [values, HandleInputChange, reset] = useForm(task || taskInfo)
 
     const MySwal = withReactContent(Swal)
 
     const handleSaveClick = () => {
-        const newTaskList = [...taskList,{
-            id: taskList.length +1,
-            ...values,
-            done:false
-        }]
+        let newTaskList = []
+        if (task) {
+            newTaskList = taskList.map((taskItem) => {
+                if (taskItem.id === task.id){
+                    task.task = values.task
+                    task.description = values.description
+                    task.location = values.location
+                    task.limit = values.limit
+                }
+                return taskItem
+            })
+        } else {
+            newTaskList = [...taskList,{
+                id: uuidv4(),
+                ...values,
+                done:false
+            }]
+        }      
         
         setTaskList(newTaskList)
 
@@ -28,18 +43,21 @@ const AddTaskModal = ({taskList, setTaskList}) => {
 
         MySwal.fire({
             icon: 'success',
-            title: "Task added"
+            title: task ? 'Task updated' : 'Task added'
         })
     }
 
+    const id = task?.id || ''
+
     return(
-        <div className="modal fade" id={"AddTaskModal"}>
+        <div className="modal fade" id={"AddTaskModal"+id}>
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div  className="modal-header">
-                        <h1 className="modal-title"
-                            id="AddTaskModalLabel">Add New Task
-                        </h1>
+                        <h5 className="modal-title"
+                            id="AddTaskModalLabel"
+                            >{task ? "Edit Task" : "Add New Task"}
+                        </h5>
                         <button 
                             type="button" className="btn-close" 
                             data-bs-dismiss="modal">

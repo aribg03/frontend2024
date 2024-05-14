@@ -17,10 +17,13 @@ function App() {
     <h2>To Do List</h2>
     <hr/>
     <List
-      taskList={taskList}/>
+      taskList={taskList}
+      setTaskList={setTaskList}/>
     <hr/>
     <div className="text-end">
-    <AddTaskModal taskList = {taskList} setTaskList = {setTaskList} />
+    <AddTaskModal 
+    taskList = {taskList} 
+    setTaskList = {setTaskList} />
       <button
         type="button"
         className="btn btn-outline-primary"
