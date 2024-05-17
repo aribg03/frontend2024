@@ -3,19 +3,19 @@ import { getWeather } from "../../api/WeatherApi"
 import CityCardContent from "./CityCardContent"
 import CityCardPlaceholder from "./CityCardPlaceholder"
 
-const CityCard = () => {
+const CityCard = ({city}) => {
     const [weather, setWeather] = useState(null)
 
     useEffect(()=>{
     const getCityWeather = async()=>{
-      setWeather(await getWeather())
+      setWeather(await getWeather(city))
     }
 
     getCityWeather() 
-    },[])
+    },[city])
     
     return(
-        <div className="card" style={{width:'18rem'}}>
+        <div className="col-1 card m-2" style={{width:'18rem'}}>
             {weather ?
             <CityCardContent weather = {weather} /> :
             <CityCardPlaceholder />}
